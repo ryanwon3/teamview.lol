@@ -61,7 +61,7 @@ class DraftState:
     our_side: str = BLUE  # BLUE = we draft first
     entries: list[str | None] = field(default_factory=list)  # champion key per finished step; None = no ban
     role_overrides: dict[str, str] = field(default_factory=dict)  # champion key -> Riot position
-    fearless: str = "off"
+    fearless: str = "hard"  # the team's in-house scrims run fearless; game 1 is unaffected
     our_earlier: set[str] = field(default_factory=set)  # champions we played earlier in the series
     their_earlier: set[str] = field(default_factory=set)
 

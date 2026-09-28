@@ -206,7 +206,7 @@ def comp_profile(champs: list[Champion]) -> CompProfile:
         size=len(champs), totals=totals,
         max_engage=max((c.rating("engage") for c in champs), default=0),
         ap_share=ap / (ad + ap) if ad + ap else None,
-        archetype=top if top and arch[top] >= 0.3 else None,
+        archetype=top if top and len(champs) >= 2 and arch[top] >= 0.3 else None,
         scaling=scaling, missing=missing,
     )
 
