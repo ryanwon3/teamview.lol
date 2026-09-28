@@ -1,15 +1,23 @@
-from teamview.analysis import (build_player_report, ban_suggestions, lane_matchups, parse_riot_ids,
-                               rank_score, score_label, summarize_team)
+from teamview.analysis import (assign_roles, build_player_report, ban_suggestions, lane_matchups,
+                               parse_riot_ids, rank_score, score_label, summarize_team)
 from teamview.riot import RateLimiter
 
 
-def match(puuid, champ, win, role="MIDDLE", duration=1800, k=5, d=3, a=7):
+def match(puuid, champ, win, role="MIDDLE", duration=1800, k=5, d=3, a=7, champ_id=0):
     return {"info": {"gameDuration": duration, "participants": [
-        {"puuid": "someone-else", "championName": "Teemo", "win": not win, "kills": 0, "deaths": 0,
-         "assists": 0, "totalMinionsKilled": 0, "neutralMinionsKilled": 0, "teamPosition": "TOP"},
-        {"puuid": puuid, "championName": champ, "win": win, "kills": k, "deaths": d, "assists": a,
-         "totalMinionsKilled": 200, "neutralMinionsKilled": 10, "teamPosition": role},
+        {"puuid": "someone-else", "championName": "Teemo", "championId": 17, "win": not win,
+         "kills": 0, "deaths": 0, "assists": 0, "totalMinionsKilled": 0, "neutralMinionsKilled": 0,
+         "teamPosition": "TOP"},
+        {"puuid": puuid, "championName": champ, "championId": champ_id, "win": win, "kills": k,
+         "deaths": d, "assists": a, "totalMinionsKilled": 200, "neutralMinionsKilled": 10,
+         "teamPosition": role},
     ]}}
+
+
+def player(riot_id, roles, tier="GOLD", rank="I"):
+    """A player whose recent games are `roles`, e.g. {"MIDDLE": 5, "TOP": 3}."""
+    games = [match(riot_id, "Ahri", True, role) for role, n in roles.items() for _ in range(n)]
+    return build_player_report(riot_id, riot_id, [entry(tier, rank, 0)], [], games)
 
 
 def entry(tier, rank, lp, queue="RANKED_SOLO_5x5"):
@@ -40,6 +48,15 @@ def test_player_report_aggregates_champions_and_skips_remakes():
     assert ahri.cs_per_min == 7.0
     assert r.main_role == "MIDDLE"
     assert r.rank_label == "Platinum I 20 LP"
+
+
+def test_champions_use_display_names_by_id():
+    matches = [match("p1", "MonkeyKing", True, champ_id=62), match("p1", "Kaisa", True, champ_id=145),
+               match("p1", "NewChamp", True, champ_id=999)]
+    names = {62: "Wukong", 145: "Kai'Sa"}
+    r = build_player_report("A#NA1", "p1", [], [{"championId": 62, "championPoints": 1000}], matches, names)
+    assert sorted(c.champion for c in r.champions) == ["Kai'Sa", "NewChamp", "Wukong"]  # unknown id keeps its key
+    assert r.mastery == [("Wukong", 1000)]
 
 
 def test_flex_rank_used_when_no_solo():
@@ -83,6 +100,30 @@ def test_lane_matchups_pair_by_main_role():
     rows = lane_matchups([us], [them])
     assert rows[0]["Role"] == "Mid"
     assert rows[0]["Edge"] == us.strength - them.strength
+
+
+def test_assign_roles_moves_a_flexible_player_off_a_shared_main_role():
+    one_trick = player("Mid#NA1", {"MIDDLE": 6})
+    flex = player("Flex#NA1", {"MIDDLE": 5, "TOP": 3})
+    seats = assign_roles([one_trick, flex])
+    assert seats == {"MIDDLE": one_trick, "TOP": flex}
+
+
+def test_assign_roles_seats_five_and_benches_the_weaker_duplicate():
+    team = [player("T#NA1", {"TOP": 5}), player("J#NA1", {"JUNGLE": 5}), player("M#NA1", {"MIDDLE": 5}),
+            player("A#NA1", {"BOTTOM": 5}), player("S#NA1", {"UTILITY": 5}),
+            player("Sub#NA1", {"UTILITY": 5}, tier="SILVER")]
+    seats = assign_roles(team)
+    assert [seats[r].riot_id for r in ("TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY")] == [
+        "T#NA1", "J#NA1", "M#NA1", "A#NA1", "S#NA1"]
+
+
+def test_lane_matchups_keep_every_player_when_mains_collide():
+    us = [player("Top1#NA1", {"TOP": 6}), player("Top2#NA1", {"TOP": 4, "BOTTOM": 2})]
+    them = [player("Mid#NA1", {"MIDDLE": 5})]
+    rows = lane_matchups(us, them)
+    assert [(r["Role"], r["Us"].split(" ")[0]) for r in rows] == [
+        ("Top", "Top1#NA1"), ("Mid", "?"), ("ADC", "Top2#NA1")]
 
 
 def test_rate_limiter_blocks_when_window_full(monkeypatch):

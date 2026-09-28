@@ -6,8 +6,9 @@ Everything here is pure (no network), so it can be unit tested with fixtures.
 from __future__ import annotations
 
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass, field
+from itertools import permutations
 
 TIERS = ["IRON", "BRONZE", "SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND"]
 APEX_TIERS = ["MASTER", "GRANDMASTER", "CHALLENGER"]
@@ -167,6 +168,7 @@ def build_player_report(riot_id: str, puuid: str | None, league_entries: list[di
             report.ranked_wins, report.ranked_losses = entry["wins"], entry["losses"]
             break
 
+    names = champ_names or {}
     champs: dict[str, ChampStats] = {}
     for match in matches:
         info = match["info"]
@@ -175,7 +177,10 @@ def build_player_report(riot_id: str, puuid: str | None, league_entries: list[di
         me = next((p for p in info["participants"] if p["puuid"] == puuid), None)
         if me is None:
             continue
-        stats = champs.setdefault(me["championName"], ChampStats(me["championName"]))
+        # championName is Riot's internal key ("MonkeyKing", "JarvanIV"), so label by id with
+        # the Data Dragon display name ("Wukong", "Jarvan IV") when we have it, as mastery does.
+        champion = names.get(me.get("championId"), me["championName"])
+        stats = champs.setdefault(champion, ChampStats(champion))
         stats.games += 1
         stats.wins += int(me["win"])
         stats.kills += me["kills"]
@@ -189,7 +194,6 @@ def build_player_report(riot_id: str, puuid: str | None, league_entries: list[di
         report.recent_wins += int(me["win"])
 
     report.champions = sorted(champs.values(), key=lambda c: (-c.games, -c.wins))
-    names = champ_names or {}
     report.mastery = [
         (names.get(m["championId"], str(m["championId"])), m["championPoints"]) for m in masteries
     ]
@@ -242,17 +246,28 @@ def summarize_team(players: list[PlayerReport], min_games: int = 2, top_n: int =
     )
 
 
-def lane_matchups(mine: list[PlayerReport], theirs: list[PlayerReport]) -> list[dict]:
-    """Pair players by their most-played role and compare strength lane by lane."""
-    def by_role(players):
-        out = defaultdict(list)
-        for p in players:
-            if p.found and p.main_role:
-                out[p.main_role].append(p)
-        # Keep the strongest player when two share a main role.
-        return {r: max(ps, key=lambda p: p.strength or -1) for r, ps in out.items()}
+def assign_roles(players: list[PlayerReport]) -> dict[str, PlayerReport]:
+    """Seat each player in a different role, matching their recent games as closely as possible.
 
-    my_roles, their_roles = by_role(mine), by_role(theirs)
+    Tries every seating and keeps the one where players have the most recent games in their
+    seats, so a mid who also plays top moves to top instead of colliding with another mid.
+    With more than five players, the stronger lineup wins ties and the rest sit out.
+    """
+    seated = [p for p in players if p.found and p.roles]
+    if len(seated) <= len(ROLE_ORDER):
+        options = (dict(zip(roles, seated)) for roles in permutations(ROLE_ORDER, len(seated)))
+    else:
+        options = (dict(zip(ROLE_ORDER, lineup)) for lineup in permutations(seated, len(ROLE_ORDER)))
+
+    def fit(option):
+        return (sum(p.roles[r] for r, p in option.items()),
+                sum(p.strength or 0 for p in option.values()))
+    return max(options, key=fit, default={})
+
+
+def lane_matchups(mine: list[PlayerReport], theirs: list[PlayerReport]) -> list[dict]:
+    """Seat both teams in the five roles and compare strength lane by lane."""
+    my_roles, their_roles = assign_roles(mine), assign_roles(theirs)
     rows = []
     for role in ROLE_ORDER:
         a, b = my_roles.get(role), their_roles.get(role)
