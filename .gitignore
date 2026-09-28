@@ -1,0 +1,10 @@
+# Secrets: never commit the Riot API key
+.env
+.streamlit/secrets.toml
+
+# Local cache
+*.db
+
+__pycache__/
+.pytest_cache/
+.venv/
