@@ -3,7 +3,7 @@
 Scout an opposing League of Legends team from their Riot IDs. Paste both rosters and get:
 
 - **Team strength**: each team's average rank, and how far ahead or behind you are
-- **Lane by lane**: players paired by their most-played role
+- **Lane by lane**: each player seated in a different role, matching their recent games
 - **Strongest player** on each team
 - **Champion pools**: games, win rate, KDA and CS/min per champion, plus top mastery
 - **Picks to watch and suggested bans**: champions a player plays a lot *and* wins on
