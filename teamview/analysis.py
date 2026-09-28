@@ -246,13 +246,18 @@ def summarize_team(players: list[PlayerReport], min_games: int = 2, top_n: int =
     )
 
 
-def assign_roles(players: list[PlayerReport]) -> dict[str, PlayerReport]:
-    """Seat each player in a different role, matching their recent games as closely as possible.
+def assign_roles(players: list[PlayerReport], in_order: bool = False) -> dict[str, PlayerReport]:
+    """Seat each player in a different role.
 
-    Tries every seating and keeps the one where players have the most recent games in their
-    seats, so a mid who also plays top moves to top instead of colliding with another mid.
-    With more than five players, the stronger lineup wins ties and the rest sit out.
+    With `in_order`, a roster of five or more is read as Top, Jungle, Mid, ADC, Support, then
+    subs, and a Riot ID that wasn't found leaves its lane empty. Otherwise (or with fewer than
+    five players) roles come from recent games: every seating is tried and the one with the most
+    recent games in each player's seat wins, so a mid who also plays top moves to top instead of
+    colliding with another mid. With more than five players, the stronger lineup wins ties.
     """
+    if in_order and len(players) >= len(ROLE_ORDER):
+        return {role: p for role, p in zip(ROLE_ORDER, players) if p.found}
+
     seated = [p for p in players if p.found and p.roles]
     if len(seated) <= len(ROLE_ORDER):
         options = (dict(zip(roles, seated)) for roles in permutations(ROLE_ORDER, len(seated)))
@@ -265,9 +270,10 @@ def assign_roles(players: list[PlayerReport]) -> dict[str, PlayerReport]:
     return max(options, key=fit, default={})
 
 
-def lane_matchups(mine: list[PlayerReport], theirs: list[PlayerReport]) -> list[dict]:
+def lane_matchups(mine: list[PlayerReport], theirs: list[PlayerReport],
+                  in_order: bool = False) -> list[dict]:
     """Seat both teams in the five roles and compare strength lane by lane."""
-    my_roles, their_roles = assign_roles(mine), assign_roles(theirs)
+    my_roles, their_roles = assign_roles(mine, in_order), assign_roles(theirs, in_order)
     rows = []
     for role in ROLE_ORDER:
         a, b = my_roles.get(role), their_roles.get(role)

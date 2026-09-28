@@ -126,6 +126,30 @@ def test_lane_matchups_keep_every_player_when_mains_collide():
         ("Top", "Top1#NA1"), ("Mid", "?"), ("ADC", "Top2#NA1")]
 
 
+def test_assign_roles_in_order_follows_the_roster_not_solo_queue():
+    # Solo queue says this is two supports and two ADCs; the roster order says otherwise.
+    team = [player("Doh#NA1", {"UTILITY": 5}), player("Exos#NA1", {"JUNGLE": 5}),
+            player("TFT#NA1", {"BOTTOM": 5}), player("Yaz#NA1", {"JUNGLE": 5}),
+            player("Ado#NA1", {"BOTTOM": 5}), player("Sub#NA1", {"MIDDLE": 5})]
+    seats = assign_roles(team, in_order=True)
+    assert {r: p.riot_id for r, p in seats.items()} == {
+        "TOP": "Doh#NA1", "JUNGLE": "Exos#NA1", "MIDDLE": "TFT#NA1", "BOTTOM": "Yaz#NA1", "UTILITY": "Ado#NA1"}
+
+
+def test_assign_roles_in_order_leaves_a_gap_for_a_missing_player():
+    missing = build_player_report("Typo#NA1", None, [], [], [])
+    team = [player("T#NA1", {"TOP": 5}), missing, player("M#NA1", {"MIDDLE": 5}),
+            player("A#NA1", {"BOTTOM": 5}), player("S#NA1", {"UTILITY": 5})]
+    seats = assign_roles(team, in_order=True)
+    assert "JUNGLE" not in seats and seats["MIDDLE"].riot_id == "M#NA1"
+
+
+def test_assign_roles_in_order_guesses_for_short_rosters():
+    team = [player("Mid#NA1", {"MIDDLE": 5}), player("Top#NA1", {"TOP": 5})]
+    assert {r: p.riot_id for r, p in assign_roles(team, in_order=True).items()} == {
+        "MIDDLE": "Mid#NA1", "TOP": "Top#NA1"}
+
+
 def test_rate_limiter_blocks_when_window_full(monkeypatch):
     clock = [0.0]
     slept = []

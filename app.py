@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
-from teamview.analysis import (ROLE_LABELS, PlayerReport, TeamSummary, ban_suggestions,
+from teamview.analysis import (ROLE_LABELS, PlayerReport, TeamSummary, assign_roles, ban_suggestions,
                                lane_matchups, parse_riot_ids, summarize_team)
 from teamview.riot import PLATFORM_TO_REGION, QUEUE_FLEX, QUEUE_SOLO, RiotClient, RiotError, champion_names
 from teamview.scout import scout_player
@@ -54,7 +54,12 @@ def scout_team(client, ids, games, queues, champ_names, progress, done, total, l
     return reports
 
 
-def players_table(players: list[PlayerReport]) -> pd.DataFrame:
+def lane_label(p: PlayerReport, lanes: dict[int, str]) -> str:
+    """The lane a player is seated in, else their most-played solo queue role."""
+    return ROLE_LABELS.get(lanes.get(id(p)) or p.main_role, "?")
+
+
+def players_table(players: list[PlayerReport], lanes: dict[int, str]) -> pd.DataFrame:
     rows = []
     for p in players:
         if not p.found:
@@ -62,7 +67,8 @@ def players_table(players: list[PlayerReport]) -> pd.DataFrame:
         wr = p.recent_winrate
         rows.append({
             "Player": p.riot_id,
-            "Role": ROLE_LABELS.get(p.main_role, "?"),
+            "Lane": ROLE_LABELS.get(lanes.get(id(p)), "-"),
+            "Solo Q role": ROLE_LABELS.get(p.main_role, "?"),
             "Rank": p.rank_label + (f" ({p.queue})" if p.queue == "Flex" else ""),
             "Strength": round(p.strength) if p.strength is not None else None,
             "Recent WR": f"{wr:.0%} ({p.recent_games})" if wr is not None else "-",
@@ -85,7 +91,8 @@ def champ_table(p: PlayerReport) -> pd.DataFrame:
     } for c in p.champions])
 
 
-def show_team(summary: TeamSummary, is_opponent: bool):
+def show_team(summary: TeamSummary, seats: dict[str, PlayerReport], is_opponent: bool):
+    lanes = {id(p): role for role, p in seats.items()}
     if summary.missing:
         st.warning("Riot ID not found: " + ", ".join(summary.missing))
     if summary.unranked:
@@ -95,9 +102,9 @@ def show_team(summary: TeamSummary, is_opponent: bool):
         s = summary.strongest
         top = ", ".join(c.champion for c in s.champions[:3]) or "no recent games"
         st.markdown(f"**Strongest player:** {s.riot_id}, {s.rank_label}, "
-                    f"{ROLE_LABELS.get(s.main_role, '?')}, plays {top}")
+                    f"{lane_label(s, lanes)}, plays {top}")
 
-    st.dataframe(players_table(summary.players), hide_index=True, width="stretch")
+    st.dataframe(players_table(summary.players, lanes), hide_index=True, width="stretch")
 
     left, right = st.columns(2)
     with left:
@@ -119,7 +126,7 @@ def show_team(summary: TeamSummary, is_opponent: bool):
     for p in summary.players:
         if not p.found:
             continue
-        with st.expander(f"{p.riot_id} · {p.rank_label} · {ROLE_LABELS.get(p.main_role, '?')}"):
+        with st.expander(f"{p.riot_id} · {p.rank_label} · {lane_label(p, lanes)}"):
             if p.champions:
                 st.dataframe(champ_table(p), hide_index=True, width="stretch")
             else:
@@ -132,13 +139,18 @@ def show_team(summary: TeamSummary, is_opponent: bool):
 # ---------- UI ----------
 
 st.title("teamview.lol")
-st.caption("Paste Riot IDs (Name#TAG), one per line or comma separated. "
-           "Lobby chat like \"Name #TAG joined the lobby\" works too.")
+st.caption("Paste Riot IDs (Name#TAG), one per line or comma separated, in role order: "
+           "Top, Jungle, Mid, ADC, Support, then subs. Lobby chat like \"Name #TAG joined the "
+           "lobby\" works too: untick \"Rosters are in role order\" and lanes are guessed.")
 
 with st.sidebar:
     platform = st.selectbox("Server", list(PLATFORM_TO_REGION), index=0)
     default_tag = st.text_input("Default tag", value="NA1",
                                 help="Used when a line has no #TAG.")
+    in_order = st.checkbox("Rosters are in role order", value=True,
+                           help="Lines are Top, Jungle, Mid, ADC, Support, then subs. Untick for "
+                                "pasted lobby chat, and lanes are guessed from solo queue games. "
+                                "Teams with fewer than five players are always guessed.")
     games = st.slider("Games per player", 10, 50, 20, step=5,
                       help="More games give better champion pools but take longer the first time.")
     include_flex = st.checkbox("Include flex queue", value=True)
@@ -146,8 +158,9 @@ with st.sidebar:
                "ranked solo and flex games only.")
 
 col_us, col_them = st.columns(2)
-our_text = col_us.text_area("Our team", height=160, placeholder="Player1#NA1\nPlayer2#NA1")
-their_text = col_them.text_area("Opponent", height=160, placeholder="Enemy1#NA1\nEnemy2#NA1")
+placeholder = "Top#NA1\nJungle#NA1\nMid#NA1\nADC#NA1\nSupport#NA1"
+our_text = col_us.text_area("Our team", height=160, placeholder=placeholder)
+their_text = col_them.text_area("Opponent", height=160, placeholder=placeholder)
 
 if st.button("Scout", type="primary"):
     key = api_key()
@@ -185,7 +198,9 @@ if results:
         c.metric("Our edge", f"{edge:+.0f} pts", f"about {abs(edge) / 100:.1f} divisions "
                  f"{'ahead' if edge >= 0 else 'behind'}")
 
-    matchups = lane_matchups(results["ours"], results["theirs"])
+    our_seats = assign_roles(results["ours"], in_order)
+    their_seats = assign_roles(results["theirs"], in_order)
+    matchups = lane_matchups(results["ours"], results["theirs"], in_order)
     if matchups:
         st.subheader("Lane by lane")
         df = pd.DataFrame(matchups)
@@ -194,9 +209,9 @@ if results:
 
     tab_them, tab_us = st.tabs(["Opponent", "Our team"])
     with tab_them:
-        show_team(theirs, is_opponent=True)
+        show_team(theirs, their_seats, is_opponent=True)
     with tab_us:
-        show_team(ours, is_opponent=False)
+        show_team(ours, our_seats, is_opponent=False)
 
     st.caption("Strength = rank as points (100 per division, 400 per tier) plus a recent-form "
                "bonus: +80 for a 60% win rate over 20+ games, -80 for 40%.")
