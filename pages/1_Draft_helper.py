@@ -104,12 +104,14 @@ def team_rosters(db: ChampionDB):
     if not results:
         return {}, {}, [], []
     ours, theirs = results.get("ours", []), results.get("theirs", [])
+    in_order = st.session_state.draft_in_order
     for side, reports in (("ours", ours), ("theirs", theirs)):
         key = f"draft_roles_{side}"
         ids = {r.riot_id for r in reports if r.found}
         saved = st.session_state.get(key)
-        if not saved or not set(saved.values()) <= ids:
-            st.session_state[key] = default_roles(reports)
+        if not saved or not set(saved.values()) <= ids or st.session_state.get(f"{key}_in_order") != in_order:
+            st.session_state[key] = default_roles(reports, in_order)
+            st.session_state[f"{key}_in_order"] = in_order
     return (roster_from_reports(ours, st.session_state["draft_roles_ours"]),
             roster_from_reports(theirs, st.session_state["draft_roles_theirs"]), ours, theirs)
 
@@ -228,6 +230,9 @@ st.caption("Step through champ select and get pick and ban suggestions with the 
 names = ddragon_names()
 db = champion_db(tuple(sorted(names.values())))
 state = draft()
+if "draft_in_order" not in st.session_state:
+    # Match the scouting page's "Rosters are in role order" box when it shares its value
+    st.session_state.draft_in_order = st.session_state.get("roster_in_order", True)
 ours, theirs, our_reports, their_reports = team_rosters(db)
 
 with st.expander("Draft settings", expanded=state.step == 0):
@@ -249,6 +254,10 @@ with st.expander("Draft settings", expanded=state.step == 0):
             default=sorted(db.name(k) for k in state.their_earlier))}
     if our_reports or their_reports:
         st.caption("Who plays which role. This decides whose champion pool counts for each pick.")
+        st.checkbox("Rosters are in role order", key="draft_in_order",
+                    help="Same as on the scouting page: five or more Riot IDs are read as Top, Jungle, "
+                         "Mid, ADC, Support. Untick to guess roles from solo queue games.")
+        ours, theirs, our_reports, their_reports = team_rosters(db)
         role_editor("Our team", our_reports, "draft_roles_ours")
         role_editor("Opponent", their_reports, "draft_roles_theirs")
         ours, theirs, _, _ = team_rosters(db)

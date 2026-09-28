@@ -98,12 +98,16 @@ def player_from_report(report) -> Player:
     return player
 
 
-def default_roles(reports) -> dict[str, str]:
+def default_roles(reports, in_order: bool = False) -> dict[str, str]:
     """Position -> Riot ID, seated the same way as the scouting page's lane-by-lane table.
 
-    Players with no recent ranked games fill whatever roles are left.
+    `in_order` reads a roster of five or more as Top, Jungle, Mid, ADC, Support, like the
+    scouting page's "Rosters are in role order" box. Otherwise players with no recent ranked
+    games fill whatever roles are left.
     """
-    out = {role: p.riot_id for role, p in seat_players(reports).items()}
+    out = {role: p.riot_id for role, p in seat_players(reports, in_order).items()}
+    if in_order and len(reports) >= len(ROLE_ORDER):
+        return out
     leftovers = [r.riot_id for r in reports if r.found and r.riot_id not in out.values()]
     for role in ROLE_ORDER:
         if role not in out and leftovers:
@@ -111,9 +115,9 @@ def default_roles(reports) -> dict[str, str]:
     return out
 
 
-def roster_from_reports(reports, roles: dict[str, str] | None = None) -> Roster:
+def roster_from_reports(reports, roles: dict[str, str] | None = None, in_order: bool = False) -> Roster:
     """`roles` maps a position to a Riot ID; defaults to `default_roles`."""
-    roles = roles if roles is not None else default_roles(reports)
+    roles = roles if roles is not None else default_roles(reports, in_order)
     by_id = {r.riot_id: r for r in reports if r.found}
     return {role: player_from_report(by_id[rid]) for role, rid in roles.items() if rid in by_id}
 

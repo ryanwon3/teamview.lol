@@ -127,6 +127,12 @@ def test_rosters_seat_players_in_distinct_roles_and_merge_mastery():
     assert a.comfort("MonkeyKing") == 0.45  # mastery floor, matched across spellings
 
 
+def test_rosters_in_role_order_follow_the_pasted_order():
+    reports = [report(f"P{i}#1", {"MIDDLE": 10}) for i in range(5)]
+    assert default_roles(reports, in_order=True) == {
+        "TOP": "P0#1", "JUNGLE": "P1#1", "MIDDLE": "P2#1", "BOTTOM": "P3#1", "UTILITY": "P4#1"}
+
+
 # ---------- composition ----------
 
 def test_comp_needs_and_profile():
