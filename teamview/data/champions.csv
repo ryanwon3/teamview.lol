@@ -1,0 +1,174 @@
+name,roles,damage,frontline,engage,peel,poke,waveclear,pick,split,scaling,blind
+Aatrox,top,AD,2,1,0,1,2,0,1,2,2
+Ahri,mid,AP,0,1,0,1,2,3,0,2,3
+Akali,mid top,AP,0,1,0,0,1,2,1,2,1
+Akshan,mid top,AD,0,0,0,1,1,2,2,2,1
+Alistar,support,AP,3,3,2,0,0,1,0,2,3
+Ambessa,top,AD,2,2,0,0,2,1,2,2,2
+Amumu,jungle support,AP,3,3,1,0,1,1,0,2,2
+Anivia,mid,AP,0,1,2,1,3,1,0,3,1
+Annie,mid support,AP,0,2,1,0,2,2,0,2,1
+Aphelios,bot,AD,0,0,1,1,2,0,0,3,1
+Ashe,bot support,AD,0,2,1,1,1,2,0,2,2
+Aurelion Sol,mid,AP,0,1,0,2,3,0,0,3,1
+Aurora,mid top,AP,0,1,1,1,2,2,1,2,2
+Azir,mid,AP,0,2,2,1,2,1,0,3,2
+Bard,support,AP,0,2,1,1,0,3,0,2,2
+Bel'Veth,jungle,AD,1,1,0,0,2,0,1,3,1
+Blitzcrank,support,AP,1,2,0,0,0,3,0,1,1
+Brand,support mid,AP,0,0,0,2,3,1,0,2,1
+Braum,support,AP,3,1,3,0,0,1,0,2,2
+Briar,jungle,AD,1,2,0,0,1,1,0,1,1
+Caitlyn,bot,AD,0,0,0,2,2,1,0,2,2
+Camille,top,AD,1,1,0,0,1,2,3,2,1
+Cassiopeia,mid top,AP,0,1,1,1,3,0,0,3,1
+Cho'Gath,top mid,AP,3,1,1,0,2,1,0,3,2
+Corki,mid,MIX,0,0,0,2,2,0,0,2,2
+Darius,top,AD,2,1,0,0,1,0,1,1,1
+Diana,jungle mid,AP,1,3,0,0,2,1,0,2,2
+Dr. Mundo,top jungle,AD,3,1,0,1,1,0,1,3,2
+Draven,bot,AD,0,0,0,0,1,0,0,1,1
+Ekko,jungle mid,AP,0,1,0,0,2,2,1,2,2
+Elise,jungle,AP,0,1,0,1,1,2,0,1,1
+Evelynn,jungle,AP,0,0,0,0,1,3,0,2,1
+Ezreal,bot,MIX,0,0,0,3,2,0,0,2,3
+Fiddlesticks,jungle,AP,0,3,0,0,2,1,0,2,2
+Fiora,top,AD,0,0,0,0,1,0,3,3,0
+Fizz,mid,AP,0,1,0,0,1,2,1,2,1
+Galio,mid support,AP,2,3,2,0,2,1,0,2,2
+Gangplank,top mid,AD,0,0,0,2,2,0,2,3,1
+Garen,top,AD,2,1,0,0,1,1,1,2,1
+Gnar,top,AD,2,3,1,1,1,0,1,2,2
+Gragas,jungle top support,AP,2,2,2,1,2,1,0,2,3
+Graves,jungle,AD,1,0,0,0,2,1,1,2,2
+Gwen,top jungle,AP,1,1,0,0,2,0,2,3,1
+Hecarim,jungle,AD,2,3,0,0,2,1,0,2,2
+Heimerdinger,mid top support,AP,0,0,1,2,3,0,1,2,0
+Hwei,mid support,AP,0,1,1,3,3,2,0,2,2
+Illaoi,top,AD,2,0,0,0,2,0,2,2,1
+Irelia,top mid,AD,1,2,0,0,1,1,2,2,1
+Ivern,jungle support,AP,0,0,2,0,1,1,0,2,2
+Janna,support,AP,0,0,3,0,1,0,0,2,3
+Jarvan IV,jungle,AD,2,3,1,0,1,1,0,1,3
+Jax,top jungle,MIX,1,1,0,0,1,0,3,3,1
+Jayce,top mid,AD,0,0,0,3,2,0,1,1,1
+Jhin,bot,AD,0,0,0,2,1,2,0,2,2
+Jinx,bot,AD,0,0,0,1,2,0,0,3,1
+K'Sante,top,AD,3,2,2,0,1,0,1,2,3
+Kai'Sa,bot,MIX,0,1,0,0,1,1,0,3,2
+Kalista,bot,AD,0,2,0,0,1,1,0,1,1
+Karma,support mid top,AP,0,1,2,2,2,0,0,2,3
+Karthus,jungle mid,AP,0,0,0,2,3,0,0,3,1
+Kassadin,mid,AP,0,1,0,0,1,1,0,3,0
+Katarina,mid,AP,0,0,0,0,1,1,0,2,0
+Kayle,top mid,MIX,0,0,1,1,2,0,2,3,0
+Kayn,jungle,AD,1,2,0,0,1,2,0,2,2
+Kennen,top mid,AP,0,3,0,1,2,0,0,2,1
+Kha'Zix,jungle,AD,0,0,0,1,1,3,0,2,2
+Kindred,jungle,AD,0,0,1,0,1,1,0,3,1
+Kled,top,AD,1,3,0,0,1,1,1,1,1
+Kog'Maw,bot,MIX,0,0,0,2,2,0,0,3,0
+LeBlanc,mid,AP,0,0,0,1,1,3,0,1,1
+Lee Sin,jungle,AD,1,2,1,0,1,2,0,1,2
+Leona,support,AP,3,3,1,0,0,2,0,1,1
+Lillia,jungle,AP,1,2,0,0,2,1,0,2,2
+Lissandra,mid,AP,1,3,2,0,2,1,0,2,2
+Locke,mid,AP,0,1,0,0,1,2,0,2,1
+Lucian,bot mid,AD,0,0,0,1,2,0,0,1,1
+Lulu,support,AP,0,0,3,1,1,1,0,2,3
+Lux,support mid,AP,0,0,1,2,3,2,0,2,2
+Malphite,top support,AP,3,3,1,1,1,0,0,2,2
+Malzahar,mid,AP,0,1,1,0,3,2,0,2,2
+Maokai,support jungle top,AP,3,3,2,0,1,1,0,2,3
+Master Yi,jungle,AD,0,0,0,0,2,0,1,3,1
+Mel,mid support,AP,0,0,2,2,2,1,0,2,2
+Milio,support,AP,0,0,3,0,0,0,0,2,3
+Miss Fortune,bot,AD,0,1,0,1,2,0,0,2,2
+Mordekaiser,top,AP,2,1,0,0,2,2,1,2,2
+Morgana,support mid,AP,0,1,2,1,2,2,0,2,2
+Naafiri,mid,AD,0,1,0,0,1,2,1,1,1
+Nami,support,AP,0,1,2,1,0,1,0,2,2
+Nasus,top,AD,2,0,0,0,1,1,3,3,0
+Nautilus,support,AP,3,3,1,0,0,3,0,1,3
+Neeko,mid support top,AP,0,3,0,1,2,2,0,2,2
+Nidalee,jungle,AP,0,0,0,3,1,1,0,1,1
+Nilah,bot,AD,0,1,0,0,2,0,0,3,0
+Nocturne,jungle,AD,1,2,0,0,2,2,1,2,2
+Nunu & Willump,jungle,AP,3,2,1,0,1,1,0,2,2
+Olaf,top jungle,AD,2,1,0,0,1,0,1,1,1
+Orianna,mid,AP,0,2,2,1,3,0,0,2,3
+Ornn,top,MIX,3,3,2,0,1,1,0,3,3
+Pantheon,top mid support jungle,AD,1,2,0,1,1,1,0,1,1
+Poppy,jungle top support,AD,3,2,3,0,1,1,0,1,2
+Pyke,support,AD,0,2,0,0,0,3,0,1,1
+Qiyana,mid jungle,AD,0,3,0,0,1,2,0,1,1
+Quinn,top,AD,0,0,0,1,1,1,2,1,0
+Rakan,support,AP,1,3,2,0,0,2,0,2,3
+Rammus,jungle,AP,3,2,1,0,1,1,0,1,2
+Rek'Sai,jungle,AD,1,2,0,0,1,2,0,1,2
+Rell,support jungle,AP,3,3,2,0,0,1,0,2,2
+Renata Glasc,support,AP,0,1,3,1,0,1,0,2,2
+Renekton,top,AD,2,1,0,0,2,1,1,1,2
+Rengar,jungle top,AD,0,0,0,0,1,3,1,2,1
+Riven,top,AD,1,1,0,0,2,1,2,2,1
+Rumble,top mid jungle,AP,1,2,0,1,3,0,0,2,2
+Ryze,mid top,AP,0,0,0,1,3,0,1,3,2
+Samira,bot,AD,0,1,0,0,1,0,0,2,1
+Sejuani,jungle top,AP,3,3,1,0,2,1,0,2,3
+Senna,support bot,AD,0,0,2,2,1,1,0,3,2
+Seraphine,support mid bot,AP,0,2,2,2,2,0,0,2,2
+Sett,top support,AD,2,2,0,0,1,1,1,1,2
+Shaco,jungle support,MIX,0,0,1,0,1,2,1,2,1
+Shen,top support,AD,3,2,2,0,1,1,2,2,2
+Shyvana,jungle,MIX,2,1,0,0,2,0,0,2,1
+Singed,top,AP,2,1,0,0,2,1,2,2,1
+Sion,top,AD,3,3,1,0,2,0,1,2,3
+Sivir,bot,AD,0,1,1,1,3,0,0,2,2
+Skarner,jungle top,AD,3,3,1,0,1,2,0,2,2
+Smolder,bot top mid,MIX,0,0,0,2,2,0,0,3,1
+Sona,support,AP,0,1,1,1,0,0,0,3,1
+Soraka,support,AP,0,0,2,1,0,0,0,2,1
+Swain,support mid top,AP,2,1,1,1,2,2,0,2,2
+Sylas,mid jungle top,AP,1,2,0,0,1,1,1,2,2
+Syndra,mid,AP,0,1,1,2,3,2,0,2,2
+Tahm Kench,support top,AP,3,1,3,0,1,1,0,2,2
+Taliyah,mid jungle,AP,0,1,1,2,3,1,0,2,2
+Talon,mid jungle,AD,0,0,0,0,2,2,1,1,1
+Taric,support,AP,2,2,3,0,0,0,0,2,1
+Teemo,top,AP,0,0,0,2,1,1,1,2,0
+Thresh,support,AP,1,2,2,0,0,3,0,2,3
+Tristana,bot mid,AD,0,1,0,0,2,0,1,3,1
+Trundle,jungle top,AD,2,1,1,0,1,1,2,2,1
+Tryndamere,top,AD,0,0,0,0,1,0,3,3,0
+Twisted Fate,mid,AP,0,1,0,1,3,3,1,2,2
+Twitch,bot jungle,AD,0,0,0,1,1,1,0,3,1
+Udyr,jungle top,AP,2,1,0,0,2,0,2,2,1
+Urgot,top,AD,2,1,0,0,2,1,1,2,1
+Varus,bot mid,MIX,0,1,0,3,2,2,0,2,3
+Vayne,bot top,AD,0,0,0,0,1,0,2,3,0
+Veigar,mid,AP,0,2,1,1,2,1,0,3,1
+Vel'Koz,support mid,AP,0,0,0,3,3,1,0,2,1
+Vex,mid,AP,0,2,1,1,2,1,0,2,2
+Vi,jungle,AD,1,3,0,0,1,2,0,1,3
+Viego,jungle,AD,1,1,0,0,2,1,0,2,2
+Viktor,mid,AP,0,0,1,2,3,0,0,3,2
+Vladimir,mid top,AP,1,1,0,0,2,0,0,3,1
+Volibear,jungle top,MIX,2,2,0,0,1,1,1,1,2
+Warwick,jungle top,MIX,2,2,0,0,1,2,1,1,2
+Wukong,jungle top,AD,2,3,0,0,2,1,1,2,2
+Xayah,bot,AD,0,0,1,1,2,0,0,2,2
+Xerath,mid support,AP,0,0,0,3,3,2,0,2,1
+Xin Zhao,jungle,AD,2,2,1,0,1,1,1,1,2
+Yasuo,mid top bot,AD,0,1,1,0,2,1,1,2,0
+Yone,mid top,AD,1,2,0,0,2,1,2,2,1
+Yorick,top,AD,1,0,0,0,2,0,3,2,1
+Yunara,bot,AD,0,0,0,0,2,0,0,3,2
+Yuumi,support,AP,0,0,2,1,0,0,0,3,0
+Zaahen,top,AD,2,2,0,0,1,1,2,2,2
+Zac,jungle top,AP,3,3,1,0,1,1,0,2,2
+Zed,mid jungle,AD,0,0,0,1,1,2,2,2,1
+Zeri,bot,AD,0,0,0,0,2,0,0,3,1
+Ziggs,mid bot,AP,0,0,0,3,3,0,0,2,2
+Zilean,support mid,AP,0,0,3,1,1,1,0,3,1
+Zoe,mid,AP,0,0,0,3,2,3,0,2,1
+Zyra,support,AP,0,1,1,2,2,1,0,2,1

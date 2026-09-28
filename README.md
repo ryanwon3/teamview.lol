@@ -44,6 +44,35 @@ doesn't.
   later that way, but not an opponent's scrims against other teams.
 - Solo queue habits are a proxy for what a team plays together.
 
+## Draft helper
+
+The **Draft helper** page (in the sidebar) walks through champ select one step at a time and
+suggests picks and bans, each with the reasons behind it. Scout both teams on the main page first:
+the helper uses your players' pools for comfort and the opponent's pools for target bans and blind
+pick risk.
+
+- **Draft order**: the standard 20-step tournament draft. Choose whether you draft first; with
+  2026's First Selection rule that's separate from map side, and map side doesn't change the order.
+- **Fearless**: off, soft (a team can't replay its own champions) or hard (nobody can replay any
+  champion picked earlier in the series). After a game, "Next game in series" carries the locks over.
+- **Pick score** (0–100) mixes player comfort, strength in that role this patch, the lane matchup
+  if the enemy laner is known, a penalty for blind picking into their laner's pool, what your comp
+  is missing (frontline, engage, damage mix, peel, waveclear), known combos, denying their comfort
+  picks, and flex value early on. Early picks lean on safety and power, late picks on counters and comp.
+- **Ban score** favors what a specific enemy player is best on, strong meta picks, and in phase 2
+  counters to champions you already locked, only for roles they still have to fill.
+
+Data comes from three places:
+
+1. **OP.gg** tier lists, counters and synergies through OP.gg's official MCP server
+   (`mcp-api.op.gg`, press *Load OP.gg data*; cached 12 hours). It isn't a documented public API,
+   so if it fails the page says so and carries on with the next two.
+2. **`teamview/data/champions.csv`**, a hand-written tag file: each champion's roles, damage type
+   and 0–3 ratings for frontline, engage, peel, poke, waveclear, pick, split push, scaling and how
+   safe it is to blind pick. Edit it in a spreadsheet; `synergies.csv` holds known combos.
+3. **Lane matchups from cached ranked games** that scouting already downloaded, heavily pulled
+   toward 50% because the samples are small.
+
 ## Tests
 
 ```bash
