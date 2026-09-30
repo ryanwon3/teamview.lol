@@ -1,0 +1,6 @@
+class LolGetChampionSynergies: data
+class Data: synergies
+class Synergie: champion_id,champion_name,position,synergy_champion_id,synergy_champion_name,synergy_position,score_rank,score,play,win,win_rate,synergy_tier_data
+class SynergyTierData: tier,rank,rank_prev,rank_prev_patch
+
+LolGetChampionSynergies(Data([Synergie(62,"Wukong","JUNGLE",117,"Lulu","SUPPORT",1,0,1580,824,0.52,SynergyTierData(2,5,5,3)),Synergie(62,"Wukong","JUNGLE",412,"Thresh","SUPPORT",2,0,1232,674,0.55,SynergyTierData(1,1,1,1)),Synergie(62,"Wukong","JUNGLE",111,"Nautilus","SUPPORT",3,0,978,504,0.52,SynergyTierData(3,9,9,9)),Synergie(62,"Wukong","JUNGLE",53,"Blitzcrank","SUPPORT",4,0,776,412,0.53,SynergyTierData(1,2,2,2)),Synergie(62,"Wukong","JUNGLE",350,"Yuumi","SUPPORT",5,0,650,308,0.47,SynergyTierData(4,20,20,17)),Synergie(62,"Wukong","JUNGLE",89,"Leona","SUPPORT",6,0,636,363,0.57,SynergyTierData(2,6,6,4)),Synergie(62,"Wukong","JUNGLE",43,"Karma","SUPPORT",7,0,609,306,0.5,SynergyTierData(4,18,18,22)),Synergie(62,"Wukong","JUNGLE",99,"Lux","SUPPORT",8,0,542,266,0.49,SynergyTierData(3,14,14,15)),Synergie(62,"Wukong","JUNGLE",432,"Bard","SUPPORT",9,0,475,262,0.55,SynergyTierData(3,12,12,12)),Synergie(62,"Wukong","JUNGLE",555,"Pyke","SUPPORT",10,0,456,236,0.52,SynergyTierData(3,13,13,16))]))

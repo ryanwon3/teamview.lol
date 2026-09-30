@@ -152,7 +152,9 @@ def load_opgg(db: ChampionDB, ours, theirs, ctx: DraftContext, only_new: bool = 
     fetched = st.session_state.setdefault("opgg_fetched", set())
     todo = {name: {r for r in roles if (name, r) not in fetched} for name, roles in wanted.items()}
     todo = {name: roles for name, roles in todo.items() if roles}
-    synergy_for = [db.name(k) for k in ctx.state.picks(True) if (db.name(k), "synergy") not in fetched]
+    our_roles = ctx.roles(True)
+    synergy_for = [(db.name(k), our_roles.get(k)) for k in ctx.state.picks(True)
+                   if (db.name(k), "synergy", our_roles.get(k)) not in fetched]
     if only_new and not todo and not synergy_for:
         return False
     progress = st.progress(0.0, text="Loading OP.gg data")
@@ -170,7 +172,7 @@ def load_opgg(db: ChampionDB, ours, theirs, ctx: DraftContext, only_new: bool = 
     st.session_state.opgg_data = data.merge(current)
     st.session_state.opgg_problems = problems
     fetched |= {(name, r) for name, roles in todo.items() for r in roles}
-    fetched |= {(name, "synergy") for name in synergy_for}
+    fetched |= {(name, "synergy", role) for name, role in synergy_for}
     return True
 
 
